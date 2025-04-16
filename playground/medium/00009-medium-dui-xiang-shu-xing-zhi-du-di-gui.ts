@@ -36,8 +36,17 @@
 
 /* _____________ 你的代码 _____________ */
 
-type DeepReadonly<T> = any
+type DeepReadonly<T> = {
+  readonly [k in keyof T]: T[k] extends Record<any, any>
+    ? keyof T[k] extends never
+      ? T[k]
+      : DeepReadonly<T[k]>
+    : T[k]
+}
 
+// type DeepReadonly<T> = {
+//   readonly [P in keyof T]: keyof T[P] extends never ? T[P] : DeepReadonly<T[P]>
+// }
 /* _____________ 测试用例 _____________ */
 import type { Equal, Expect } from '@type-challenges/utils'
 

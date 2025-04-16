@@ -39,9 +39,12 @@
 
 /* _____________ 你的代码 _____________ */
 
-type Chainable = {
-  option(key: string, value: any): any
-  get(): any
+type Chainable<T = {}> = {
+  option: <K extends string, V>(
+    key: K extends keyof T ? never : K,
+    value: V
+  ) => Chainable<Omit<T, K> & Record<K, V>>
+  get: () => T
 }
 
 /* _____________ 测试用例 _____________ */
@@ -54,6 +57,9 @@ const result1 = a
   .option('bar', { value: 'Hello World' })
   .option('name', 'type-challenges')
   .get()
+
+// eslint-disable-next-line no-console
+console.log(result1)
 
 const result2 = a
   .option('name', 'another name')
